@@ -8,10 +8,20 @@ import {
 	isPlaybackSourceMediaEventCurrent
 } from '../utils/playbackRuntimeContext';
 import {selectHlsEnginePreference} from '../utils/playerVideoLoaderHelpers';
-import {PLAYER_HLS_ENGINE_STARTUP_TIMEOUT_MS} from '../utils/playerStartupState';
+import {
+	PLAYER_HLS_ENGINE_STARTUP_TIMEOUT_MS,
+	PLAYER_PLAYBACK_START_TIMEOUT_MS
+} from '../utils/playerStartupState';
 import {createHlsStartupMeasurements} from '../utils/hlsStartupMeasurements';
 
-const NATIVE_HLS_FALLBACK_TIMEOUT_MS = 10000;
+export const resolveNativeHlsFallbackTimeoutMs = (value) => {
+	const ms = Number(value);
+	return ms > 0 && ms < PLAYER_PLAYBACK_START_TIMEOUT_MS ? ms : 10000;
+};
+
+const NATIVE_HLS_FALLBACK_TIMEOUT_MS = resolveNativeHlsFallbackTimeoutMs(
+	process.env.REACT_APP_NATIVE_HLS_FALLBACK_TIMEOUT_MS
+);
 
 const safelyResetVideo = (video) => {
 	if (!video) return;

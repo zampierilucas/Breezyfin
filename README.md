@@ -130,6 +130,10 @@ Build-time log capture flags:
 REACT_APP_ENABLE_PERSISTENT_LOGS=1 npm run serve
 ```
 
+Build-time playback flags:
+
+- `REACT_APP_NATIVE_HLS_FALLBACK_TIMEOUT_MS` sets how long native HLS can take to start before Breezyfin falls back to HLS.js. The default is `10000`. Breezyfin ignores values that are not between `0` and `12000`.
+
 ## Production build
 
 ```sh

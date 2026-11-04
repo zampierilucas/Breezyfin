@@ -1,7 +1,7 @@
 import {act, renderHook} from '@testing-library/react';
 import Hls from 'hls.js';
 
-import {usePlayerSourcePipeline} from '../usePlayerSourcePipeline';
+import {resolveNativeHlsFallbackTimeoutMs, usePlayerSourcePipeline} from '../usePlayerSourcePipeline';
 import {createPlaybackRuntimeContext} from '../../utils/playbackRuntimeContext';
 import {PLAYER_HLS_ENGINE_STARTUP_TIMEOUT_MS} from '../../utils/playerStartupState';
 
@@ -246,6 +246,14 @@ describe('usePlayerSourcePipeline', () => {
 			hlsToken,
 			{engineReady: false}
 		);
+	});
+
+	it('accepts build-time native HLS fallback timeouts below the playback start deadline', () => {
+		expect(resolveNativeHlsFallbackTimeoutMs(undefined)).toBe(10000);
+		expect(resolveNativeHlsFallbackTimeoutMs('3500')).toBe(3500);
+		expect(resolveNativeHlsFallbackTimeoutMs('12000')).toBe(10000);
+		expect(resolveNativeHlsFallbackTimeoutMs('abc')).toBe(10000);
+		expect(resolveNativeHlsFallbackTimeoutMs('-1')).toBe(10000);
 	});
 
 	it('keeps native HLS when playback starts after seven seconds', () => {
